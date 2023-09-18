@@ -1,0 +1,11 @@
+.no-wrap {
+    white-space: nowrap;
+}
+
+#suggestions li:hover {
+    background-color: red; /* 设置悬停时的背景颜色为红色 */
+    color: white; /* 设置悬停时的文本颜色为白色 */
+    cursor: pointer; /* 添加鼠标悬停指针样式 */
+}
+
+

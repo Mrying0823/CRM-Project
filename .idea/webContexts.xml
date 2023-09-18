@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebContextManager">
+    <option name="state">
+      <map>
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/settings/dictionary/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/settings/dictionary/type/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/settings/dictionary/type/save.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/settings/dictionary/value/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/settings/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/settings/qx/user/login.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/activity" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/chart/transaction/index.html" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/chart/transaction/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/clue" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/clue/detail.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/clue/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/contacts/detail.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/contacts/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/customer/detail.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/customer/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/main/index.html" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/main/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/tran/detail.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/tran/index.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/tran/save.html" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/WEB-INF/pages/workbench/tran/save.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/crm/src/main/webapp/datetimepickertest.jsp" value="file://$PROJECT_DIR$/crm/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/pages/settings/qx/user/login.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
+      </map>
+    </option>
+  </component>
+</project>
