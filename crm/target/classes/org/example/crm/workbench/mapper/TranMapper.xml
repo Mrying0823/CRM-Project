@@ -433,4 +433,16 @@
 
     where id = #{id,jdbcType=CHAR}
   </update>
+
+  <select id="selectCountOfTranGroupByStage" resultType="org.example.crm.workbench.domain.FunnelVO">
+    select count(*) as value, any_value(dv1.value) as name
+
+    from tbl_tran t
+
+    join tbl_dic_value dv1 on dv1.id = t.stage
+
+    group by t.stage
+
+    order by any_value(dv1.order_no) desc
+  </select>
 </mapper>

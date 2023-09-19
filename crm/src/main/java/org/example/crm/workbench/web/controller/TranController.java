@@ -210,7 +210,6 @@ public class TranController {
         tran.setPossibility(bundle.getString(tran.getStageId()));
         List<DicValue> stageList = dicValueService.queryDicValueByTypeCode(Constants.DIC_VALUE_STAGE);
 
-
         request.setAttribute("tran",tran);
         request.setAttribute("tranRemarkList",tranRemarkList);
         request.setAttribute("tranHistoryList",tranHistoryList);

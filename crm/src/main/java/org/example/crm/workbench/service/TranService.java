@@ -1,5 +1,6 @@
 package org.example.crm.workbench.service;
 
+import org.example.crm.workbench.domain.FunnelVO;
 import org.example.crm.workbench.domain.Tran;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface TranService {
     Tran queryTranForDetailById(String id);
 
     void saveEditTranStage(Map<String,Object> map);
+
+    List<FunnelVO> queryCountOfTranGroupByStage();
 }

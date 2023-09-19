@@ -153,7 +153,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
 						// 添加交易阶段历史
 						template +=
-							`<tr>
+								`<tr>
 								<td>`+stageName+`</td>
 								<td>`+data.retData.tranHistory.money+`</td>
 								<td>`+data.retData.tranHistory.expectedDate+`</td>
@@ -169,9 +169,6 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			});
 		});
 	});
-	
-	
-	
 </script>
 	<title>交易明细界面</title>
 

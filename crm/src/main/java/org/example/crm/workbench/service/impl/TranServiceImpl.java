@@ -5,6 +5,7 @@ import org.example.crm.commons.utils.UUIDUtils;
 import org.example.crm.commons.utils.contants.Constants;
 import org.example.crm.settings.domain.User;
 import org.example.crm.workbench.domain.Customer;
+import org.example.crm.workbench.domain.FunnelVO;
 import org.example.crm.workbench.domain.Tran;
 import org.example.crm.workbench.domain.TranHistory;
 import org.example.crm.workbench.mapper.CustomerMapper;
@@ -110,5 +111,10 @@ public class TranServiceImpl implements TranService {
         tranMapper.updateTranStage(tran);
 
         tranHistoryMapper.insertTranHistory(tranHistory);
+    }
+
+    @Override
+    public List<FunnelVO> queryCountOfTranGroupByStage() {
+        return tranMapper.selectCountOfTranGroupByStage();
     }
 }

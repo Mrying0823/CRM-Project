@@ -1,5 +1,6 @@
 package org.example.crm.workbench.mapper;
 
+import org.example.crm.workbench.domain.FunnelVO;
 import org.example.crm.workbench.domain.Tran;
 
 import java.util.List;
@@ -73,4 +74,10 @@ public interface TranMapper {
     Tran selectTranForDetailById(String id);
 
     int updateTranStage(Tran tran);
+
+    /**
+     * 查询交易表中各个阶段的数据量
+     * @return
+     */
+    List<FunnelVO> selectCountOfTranGroupByStage();
 }
