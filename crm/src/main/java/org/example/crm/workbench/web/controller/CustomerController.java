@@ -1,5 +1,11 @@
 package org.example.crm.workbench.web.controller;
 
+import org.example.crm.commons.domain.ReturnObject;
+import org.example.crm.commons.utils.DateUtils;
+import org.example.crm.commons.utils.UUIDUtils;
+import org.example.crm.commons.utils.contants.Constants;
+import org.example.crm.settings.domain.User;
+import org.example.crm.settings.service.UserService;
 import org.example.crm.workbench.domain.Contacts;
 import org.example.crm.workbench.domain.Customer;
 import org.example.crm.workbench.service.CustomerService;
@@ -9,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +24,14 @@ import java.util.Map;
 @Controller
 public class CustomerController {
 
+    private UserService userService;
+
     private CustomerService customerService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Autowired
     public void setCustomerService(CustomerService customerService) {
@@ -24,8 +39,43 @@ public class CustomerController {
     }
 
     @RequestMapping("/workbench/customer/index.do")
-    public String index() {
+    public String index(HttpServletRequest request) {
+
+        List<User> userList = userService.queryAllUsers();
+
+        request.setAttribute("userList",userList);
+
         return "workbench/customer/index";
+    }
+
+    @RequestMapping("/workbench/customer/saveCreateCustomer.do")
+    public @ResponseBody Object saveCreateCustomer(Customer customer, HttpSession session) {
+
+        User user = (User) session.getAttribute(Constants.SESSION_USER);
+        ReturnObject returnObject = new ReturnObject();
+
+        // 补充前台没有的参数
+        customer.setId(UUIDUtils.getUUID());
+        customer.setCreateBy(user.getId());
+        customer.setCreateTime(DateUtils.formatDateTime(new Date()));
+
+        try {
+            // 调用 service 层方法，保存创建的客户
+            int ret = customerService.insertCustomer(customer);
+
+            if(ret > 0) {
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
+            }else {
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试......");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试......");
+        }
+
+        return returnObject;
     }
 
     /**

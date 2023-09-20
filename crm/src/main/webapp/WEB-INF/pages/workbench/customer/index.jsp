@@ -119,6 +119,102 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 	        e.stopPropagation();
 	    });
 
+		$("#createCustomerBtn").click(function () {
+			// 初始化表单
+			$("#createCustomerForm").get(0).reset();
+
+			// 弹出创建客户模态窗口
+			$("#createCustomerModal").modal("show");
+		});
+
+		$(".my-date").datetimepicker({
+			format: "yyyy-mm-dd",
+			minView: "month",
+			initialDate: new Date(),
+			language: "zh-CN",
+			autoclose: true,
+			todayBtn: true,
+			clearBtn: true,
+			pickerPosition: "top-right"
+		});
+
+		$("#saveCreateCustomerBtn").click(function () {
+			// 收集参数
+			var owner = $("#create-customerOwner").val();
+			var name = $.trim($("#create-customerName").val());
+			var website = $.trim($("#create-website").val());
+			var phone = $.trim($("#create-phone").val());
+			var contactSummary = $.trim($("#create-contactSummary").val());
+			var nextContactTime = $("#create-nextContactTime").val();
+			var description = $.trim($("#create-description").val());
+			var address = $.trim($("#create-address").val());
+
+			// 表单验证
+			if (owner === "") {
+				alert("所有者不为空");
+				return;
+			}
+
+			if (name === "") {
+				alert("名称不为空");
+				return;
+			}
+
+			// InternetURL：[a-zA-z]+://[^\s]* 或 ^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$
+			// 添加 i 选项以表示大小写不敏感匹配
+			var urlRegExp = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
+
+			// 电话号码("XXX-XXXXXXX"、"XXXX-XXXXXXXX"、"XXX-XXXXXXX"、"XXX-XXXXXXXX"、"XXXXXXX"和"XXXXXXXX)：^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$
+			var telRegExp = /^(\(\d{3,4}-)?\d{7,8}$/;
+
+			if (website !== "") {
+				if (!urlRegExp.test(website)) {
+					alert("公司网站格式不正确");
+					return;
+				}
+			}
+
+			if (phone !== "") {
+				if (!telRegExp.test(phone)) {
+					alert("公司座机号码格式不正确");
+					return;
+				}
+			}
+
+			// 发送请求
+			$.ajax({
+				url: "workbench/customer/saveCreateCustomer.do",
+				data: {
+					owner: owner,
+					name: name,
+					website: website,
+					phone: phone,
+					contactSummary: contactSummary,
+					nextContactTime: nextContactTime,
+					description: description,
+					address: address
+				},
+				type: "post",
+				dataType: "json",
+				success: function (data) {
+					if (data.code === "1") {
+						// 关闭模态窗口
+						$("#createCustomerModal").modal("hide");
+
+						// 刷新线索列表，显示第一页数据，保持每一页显示条数不变
+						queryCustomerByConditionForPage(1,$("#bs_pagination").bs_pagination("getOption", "rowsPerPage"));
+
+					} else {
+						// 提示信息
+						alert(data.message);
+
+						// 模态窗口不关闭
+						$("#createCustomerModal").modal("show");
+					}
+				}
+			});
+		});
+
 		queryCustomerByConditionForPage(1,10);
 
 		// 给“查询”按钮添加点击事件
@@ -175,15 +271,15 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					<h4 class="modal-title" id="myModalLabel1">创建客户</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="createCustomerForm">
 					
 						<div class="form-group">
 							<label for="create-customerOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-customerOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+								<c:forEach items="${requestScope.userList}" var="user">
+									<option value="${user.id}">${user.name}</option>
+								</c:forEach>
 								</select>
 							</div>
 							<label for="create-customerName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
@@ -203,9 +299,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
+							<label for="create-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 						<div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative;"></div>
@@ -220,7 +316,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
                             <div class="form-group">
                                 <label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="create-nextContactTime">
+                                    <input type="text" class="form-control my-date" id="create-nextContactTime" readonly>
                                 </div>
                             </div>
                         </div>
@@ -229,9 +325,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
                         <div style="position: relative;top: 20px;">
                             <div class="form-group">
-                                <label for="create-address1" class="col-sm-2 control-label">详细地址</label>
+                                <label for="create-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="create-address1"></textarea>
+                                    <textarea class="form-control" rows="1" id="create-address"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -240,7 +336,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" id="saveCreateCustomerBtn">保存</button>
 				</div>
 			</div>
 		</div>
@@ -313,9 +409,9 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
                         <div style="position: relative;top: 20px;">
                             <div class="form-group">
-                                <label for="create-address" class="col-sm-2 control-label">详细地址</label>
+                                <label for="edit-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="create-address">北京大兴大族企业湾</textarea>
+                                    <textarea class="form-control" rows="1" id="edit-address">北京大兴大族企业湾</textarea>
                                 </div>
                             </div>
                         </div>
@@ -382,7 +478,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createCustomerModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="createCustomerBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editCustomerModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
