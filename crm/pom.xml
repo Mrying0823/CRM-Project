@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <url>https://github.com/Mrying0823/CRM_Project</url>
+    <url>https://github.com/Mrying0823/CRM-Project</url>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
