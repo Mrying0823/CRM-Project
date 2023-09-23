@@ -252,7 +252,133 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				$("#checkAll").prop("checked",false);
 			}
 		});
+		
+		// 给“修改”按钮添加点击事件
+		$("#editCustomerBtn").click(function () {
+			// 初始化表格
+			$("#editCustomerForm").get(0).reset();
 
+			// 收集参数
+			var checkedIds = $("#tBody input[type = 'checkbox']:checked");
+
+			// 0 选中
+			if(checkedIds.size() === 0) {
+				alert("请选择需要修改的客户");
+				return;
+			}
+
+			// 多选
+			if(checkedIds.size() > 1) {
+				alert("每次只能修改一条客户")
+				return;
+			}
+
+			// 获取 dom 对象的参数
+			var id = checkedIds.get(0).value;
+
+			// 发送请求
+			$.ajax({
+				url: "workbench/customer/selectCustomerById.do",
+				data: {
+					id
+				},
+				type: "post",
+				dataType:"json",
+				success: function (data) {
+					$("#edit-id").val(data.id);
+					$("#edit-owner").val(data.owner);
+					$("#edit-name").val(data.name);
+					$("#edit-website").val(data.website);
+					$("#edit-phone").val(data.phone);
+					$("#edit-contactSummary").val(data.contactSummary);
+					$("#edit-nextContactTime").val(data.nextContactTime);
+					$("#edit-description").val(data.description);
+					$("#edit-address").val(data.address);
+				}
+			});
+
+			// 弹出修改客户的模态窗口
+			$("#editCustomerModal").modal("show");
+		});
+
+		// 给”更新“按钮添加点击事件
+		$("#updateCustomerBtn").click(function () {
+			// 收集参数
+			var id = $("#edit-id").val();
+			var owner = $("#edit-owner").val();
+			var name = $.trim($("#edit-name").val());
+			var website = $.trim($("#edit-website").val());
+			var phone = $.trim($("#edit-phone").val());
+			var contactSummary = $.trim($("#edit-contactSummary").val());
+			var nextContactTime = $("#edit-nextContactTime").val();
+			var description = $.trim($("#edit-description").val());
+			var address = $.trim($("#edit-address").val());
+
+			// 表单验证
+			if (owner === "") {
+				alert("所有者不为空");
+				return;
+			}
+
+			if (name === "") {
+				alert("名称不为空");
+				return;
+			}
+
+			// InternetURL：[a-zA-z]+://[^\s]* 或 ^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$
+			// 添加 i 选项以表示大小写不敏感匹配
+			var urlRegExp = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
+
+			// 电话号码("XXX-XXXXXXX"、"XXXX-XXXXXXXX"、"XXX-XXXXXXX"、"XXX-XXXXXXXX"、"XXXXXXX"和"XXXXXXXX)：^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$
+			var telRegExp = /^(\(\d{3,4}-)?\d{7,8}$/;
+
+			if (website !== "") {
+				if (!urlRegExp.test(website)) {
+					alert("公司网站格式不正确");
+					return;
+				}
+			}
+
+			if (phone !== "") {
+				if (!telRegExp.test(phone)) {
+					alert("公司座机号码格式不正确");
+					return;
+				}
+			}
+
+			var bs_pagination = $("#bs_pagination");
+
+			// 发送请求
+			$.ajax({
+				url: "workbench/customer/saveEditCustomer.do",
+				data: {
+					id: id,
+					owner: owner,
+					name: name,
+					website: website,
+					phone: phone,
+					contactSummary: contactSummary,
+					nextContactTime: nextContactTime,
+					description: description,
+					address: address
+				},
+				type: "post",
+				dataType: "json",
+				success: function (data) {
+					if(data.code === "1") {
+						// 关闭模态窗口
+						$("#editCustomerModal").modal("hide");
+
+						// 刷新客户列表
+						queryCustomerByConditionForPage(bs_pagination.bs_pagination("getOption", "currentPage"),bs_pagination.bs_pagination("getOption", "rowsPerPage"))
+					}else {
+						alert(data.message);
+
+						$("#editCustomerModal").modal("show");
+					}
+				}
+			});
+		});
 	});
 	
 </script>
@@ -353,38 +479,39 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 					<h4 class="modal-title" id="myModalLabel">修改客户</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
-					
+					<form class="form-horizontal" role="form" id="editCustomerForm">
+
+						<input type="hidden" id="edit-id">
 						<div class="form-group">
-							<label for="edit-customerOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="edit-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="edit-customerOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+								<select class="form-control" id="edit-owner">
+									<c:forEach items="${requestScope.userList}" var="user">
+										<option value="${user.id}">${user.name}</option>
+									</c:forEach>
 								</select>
 							</div>
-							<label for="edit-customerName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="edit-name" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-customerName" value="动力节点">
+								<input type="text" class="form-control" id="edit-name" value="">
 							</div>
 						</div>
 						
 						<div class="form-group">
                             <label for="edit-website" class="col-sm-2 control-label">公司网站</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-website" value="http://www.bjpowernode.com">
+                                <input type="text" class="form-control" id="edit-website" value="">
                             </div>
 							<label for="edit-phone" class="col-sm-2 control-label">公司座机</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-phone" value="010-84846003">
+								<input type="text" class="form-control" id="edit-phone" value="">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
+							<label for="edit-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe"></textarea>
+								<textarea class="form-control" rows="3" id="edit-description"></textarea>
 							</div>
 						</div>
 						
@@ -392,15 +519,15 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 
                         <div style="position: relative;top: 15px;">
                             <div class="form-group">
-                                <label for="create-contactSummary1" class="col-sm-2 control-label">联系纪要</label>
+                                <label for="edit-contactSummary" class="col-sm-2 control-label">联系纪要</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="3" id="create-contactSummary1"></textarea>
+                                    <textarea class="form-control" rows="3" id="edit-contactSummary"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="create-nextContactTime2" class="col-sm-2 control-label">下次联系时间</label>
+                                <label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="create-nextContactTime2">
+                                    <input type="text" class="form-control my-date" id="edit-nextContactTime" readonly>
                                 </div>
                             </div>
                         </div>
@@ -411,7 +538,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
                             <div class="form-group">
                                 <label for="edit-address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="edit-address">北京大兴大族企业湾</textarea>
+                                    <textarea class="form-control" rows="1" id="edit-address"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -420,7 +547,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="updateCustomerBtn">更新</button>
 				</div>
 			</div>
 		</div>
@@ -479,7 +606,7 @@ String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.ge
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createCustomerBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editCustomerModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-default" id="editCustomerBtn"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				

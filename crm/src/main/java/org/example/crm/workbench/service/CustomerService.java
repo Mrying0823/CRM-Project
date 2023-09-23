@@ -15,4 +15,8 @@ public interface CustomerService {
     int insertCustomer(Customer customer);
 
     Customer queryCustomerForDetailById(String id);
+
+    Customer queryCustomerById(String id);
+
+    int saveEditCustomer(Customer customer);
 }

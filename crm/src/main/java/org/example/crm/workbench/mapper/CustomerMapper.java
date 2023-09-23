@@ -78,6 +78,15 @@ public interface CustomerMapper {
     List<Customer> selectCustomerByName(String name);
 
     /**
+     * 根据 id 查询客户，显示在修改界面
+     * @param id
+     * @return
+     */
+    Customer selectCustomerById(String id);
+
+    int updateCustomer(Customer customer);
+
+    /**
      * 跳转至客户明细界面
      * @param id
      * @return

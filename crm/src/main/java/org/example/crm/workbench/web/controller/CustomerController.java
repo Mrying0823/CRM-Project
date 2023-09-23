@@ -114,6 +114,50 @@ public class CustomerController {
     }
 
     /**
+     * 修改客户信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("/workbench/customer/selectCustomerById.do")
+    public @ResponseBody Object selectCustomerById(String id) {
+        return customerService.queryCustomerById(id);
+    }
+
+    /**
+     * 更新修改后的客户
+     * @param customer
+     * @param session
+     * @return
+     */
+    @RequestMapping("/workbench/customer/saveEditCustomer.do")
+    public @ResponseBody Object saveEditCustomer(Customer customer, HttpSession session) {
+
+        User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+        ReturnObject returnObject = new ReturnObject();
+
+        customer.setEditBy(user.getId());
+        customer.setEditTime(DateUtils.formatDateTime(new Date()));
+
+        try {
+            int ret = customerService.saveEditCustomer(customer);
+
+            if(ret > 0) {
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
+            }else {
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统繁忙，请稍后重试......");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统繁忙，请稍后重试......");
+        }
+        return returnObject;
+    }
+
+    /**
      * 跳转至客户明细界面
      * @param id
      * @param request

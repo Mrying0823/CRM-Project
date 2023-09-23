@@ -43,4 +43,14 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer queryCustomerForDetailById(String id) {
         return customerMapper.selectCustomerForDetailById(id);
     }
+
+    @Override
+    public Customer queryCustomerById(String id) {
+        return customerMapper.selectCustomerById(id);
+    }
+
+    @Override
+    public int saveEditCustomer(Customer customer) {
+        return customerMapper.updateCustomer(customer);
+    }
 }

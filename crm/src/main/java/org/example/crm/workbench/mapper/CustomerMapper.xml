@@ -341,4 +341,28 @@
 
     where name = #{name,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectCustomerById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+
+    from tbl_customer
+
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <update id="updateCustomer" parameterType="org.example.crm.workbench.domain.Customer" >
+    update tbl_customer
+    set owner = #{owner,jdbcType=CHAR},
+    name = #{name,jdbcType=VARCHAR},
+    website = #{website,jdbcType=VARCHAR},
+    phone = #{phone,jdbcType=VARCHAR},
+    edit_by = #{editBy,jdbcType=CHAR},
+    edit_time = #{editTime,jdbcType=CHAR},
+    contact_summary = #{contactSummary,jdbcType=VARCHAR},
+    next_contact_time = #{nextContactTime,jdbcType=CHAR},
+    description = #{description,jdbcType=VARCHAR},
+    address = #{address,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
 </mapper>
